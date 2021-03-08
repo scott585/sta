@@ -49,7 +49,7 @@ export function Main (props) {
     // 使用 Polkadot-JS API 来查询 pallet 中  `proofs` 的存储信息。
     // 这是一个订阅，它将总是获得最新的值，
     // 即便它发生了改变。
-    api.query.templateModule
+    api.query.poeModule
       .proofs(digest, (result) => {
         // 我们的存储项将返回一个元组，以一个数组来代表。
         setOwner(result[0].toString());
@@ -63,7 +63,7 @@ export function Main (props) {
     // 用来告诉 React hook 在文件的摘要发生更改
     // (当新文件被选择时)，或当存储订阅表示存储项的值已更新时，
     // 执行页面更新操作。
-  }, [digest, api.query.templateModule]);
+  }, [digest, api.query.poeModule]);
 
   // 若储存文件摘要的区块值不为零，我们则称该文件摘要已被声明。
   function isClaimed () {
@@ -104,7 +104,7 @@ export function Main (props) {
             type='SIGNED-TX'
             disabled={isClaimed() || !digest}
             attrs={{
-              palletRpc: 'templateModule',
+              palletRpc: 'poeModule',
               callable: 'createClaim',
               inputParams: [digest],
               paramFields: [true]
@@ -119,7 +119,7 @@ export function Main (props) {
             type='SIGNED-TX'
             disabled={!isClaimed() || owner !== accountPair.address}
             attrs={{
-              palletRpc: 'templateModule',
+              palletRpc: 'poeModule',
               callable: 'revokeClaim',
               inputParams: [digest],
               paramFields: [true]
@@ -133,8 +133,8 @@ export function Main (props) {
   );
 }
 
-export default function TemplateModule (props) {
+export default function PoeModule (props) {
   const { api } = useSubstrate();
-  return (api.query.templateModule && api.query.templateModule.proofs
+  return (api.query.poeModule && api.query.poeModule.proofs
     ? <Main {...props} /> : null);
 }
